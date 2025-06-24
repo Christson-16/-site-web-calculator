@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCalculator - Calculateur de Moyennes</title>
+    <link rel="stylesheet" href="/calculator/style.css">
+    <!-- Tu peux aussi ajouter une icône ou un lien CSS externe ici -->
+    <style>
+        /* ... Ton CSS est parfait, je le garde inchangé ... */
+        /* Je ne le réaffiche pas ici pour gagner de la place */
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <header>
+            <h1>SmartCalculator</h1>
+            <p class="subtitle">Calculateur intelligent de moyennes universitaires</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">
+                    <i>📝</i> Mes Matières
+                </h2>
+                <div id="subjects-container"></div>
+                <div class="buttons">
+                    <button id="add-subject" class="btn btn-primary">
+                        <i>+</i> Ajouter une matière
+                    </button>
+                    <button id="reset" class="btn btn-outline">
+                        <i>🗑</i> Réinitialiser
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="average-card">
+                    <h2>Ma Moyenne Générale</h2>
+                    <div class="average-value" id="average-display">0.00</div>
+                    <div class="gauge-container">
+                        <div class="gauge-fill" id="average-gauge"></div>
+                    </div>
+                    <p>Sur 20.00 points</p>
+                </div>
+
+                <div class="prediction-card">
+                    <h2 class="section-title">
+                        <i>🔮</i> Simulateur d'Objectif
+                    </h2>
+                    <p>Que se passe-t-il si j'obtiens une meilleure note dans une matière ?</p>
+
+                    <div class="prediction-controls">
+                        <select id="subject-select" class="prediction-select">
+                            <option value="">Sélectionnez une matière</option>
+                        </select>
+                        <input type="number" id="target-grade" min="0" max="20" step="0.5" 
+                               placeholder="Note" class="target-input">
+                    </div>
+                    <button id="calculate-target" class="btn btn-primary">
+                        Calculer la prédiction
+                    </button>
+
+                    <div class="prediction-result" id="prediction-result">
+                        Sélectionnez une matière et une note cible pour voir la prédiction
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>SmartCalculator © 2023 - Outil développé pour les étudiants</p>
+        </footer>
+    </div>
+
+    <script>
+        const subjectsContainer = document.getElementById('subjects-container');
+        const addSubjectBtn = document.getElementById('add-subject');
+        const resetBtn = document.getElementById('reset');
+        const averageDisplay = document.getElementById('average-display');
+        const averageGauge = document.getElementById('average-gauge');
+        const subjectSelect = document.getElementById('subject-select');
+        const targetGradeInput = document.getElementById('target-grade');
+        const calculateTargetBtn = document.getElementById('calculate-target');
+        const predictionResult = document.getElementById('prediction-result');
+
+        let subjects = [];
+
+        function addSubject() {
+            const subjectId = Date.now();
+
+            const subjectCard = document.createElement('div');
+            subjectCard.className = 'subject-card';
+            subjectCard.innerHTML = `
+                <input type="text" class="subject-input" placeholder="Nom de la matière" data-id="${subjectId}">
+                <div class="grade-coef">
+                    <input type="number" min="0" max="20" step="0.5" class="subject-grade" placeholder="Note" data-id="${subjectId}">
+                    <input type="number" min="0.5" step="0.5" value="1" class="subject-coef" placeholder="Coef" data-id="${subjectId}">
+                </div>
+                <button class="delete-btn" data-id="${subjectId}">×</button>
+            `;
+
+            subjectsContainer.appendChild(subjectCard);
+
+            const option = document.createElement('option');
+            option.value = subjectId;
+            option.textContent = Nouvelle matière ${subjects.length + 1};
+            subjectSelect.appendChild(option);
+
+            subjectCard.querySelector('.delete-btn').addEventListener('click', () => deleteSubject(subjectId));
+
+            const inputs = subjectCard.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateAverage);
+            });
+        }
+
+        function deleteSubject(subjectId) {
+            const subjectCard = document.querySelector(.subject-card input[data-id="${subjectId}"]).parentNode;
+            subjectCard.remove();
+
+            const option = document.querySelector(#subject-select option[value="${subjectId}"]);
+            if (option) option.remove();
+
+            calculateAverage();
+        }
+
+        function calculateAverage() {
+            const subjectCards = document.querySelectorAll('.subject-card');
+            let total = 0;
+            let totalCoef = 0;
+
+            subjectCards.forEach(card => {
+                const gradeInput = card.querySelector('.subject-grade');
+                const coefInput = card.querySelector('.subject-coef');
+
+                const grade = parseFloat(gradeInput.value) || 0;
+                const coef = parseFloat(coefInput.value) || 0;
+
+                if (grade > 0 && coef > 0) {
+                    total += grade * coef;
+                    totalCoef += coef;
+                }
+            });
+
+            const average = totalCoef > 0 ? (total / totalCoef) : 0;
+            averageDisplay.textContent = average.toFixed(2);
+            averageGauge.style.width = ${(average / 20) * 100}%;
+
+            updateSubjectNames();
+            return average;
+        }
+
+        function updateSubjectNames() {
+            const subjectCards = document.querySelectorAll('.subject-card');
+
+            subjectCards.forEach(card => {
+                const subjectId = card.querySelector('.subject-input').dataset.id;
+                const subjectName = card.querySelector('.subject-input').value || Matière ${subjectId};
+
+                const option = document.querySelector(#subject-select option[value="${subjectId}"]);
+                if (option) option.textContent = subjectName;
+            });
+        }
+
+        function calculatePrediction() {
+            const subjectId = subjectSelect.value;
+            const targetGrade = parseFloat(targetGradeInput.value);
+
+            // ✅ CORRECTION IMPORTANTE ICI : parenthèse fermante ajoutée
+            if (!subjectId || isNaN(targetGrade)) {
+                predictionResult.textContent = "Veuillez sélectionner une matière et entrer une note cible";
+                return;
+            }
+
+            const currentAverage = calculateAverage();
+            const subjectCard = document.querySelector(.subject-card input[data-id="${subjectId}"]).parentNode;
+
+            const currentGradeInput = subjectCard.querySelector('.subject-grade');
+            const coefInput = subjectCard.querySelector('.subject-coef');
+
+            const currentGrade = parseFloat(currentGradeInput.value) || 0;
+            const coef = parseFloat(coefInput.value) || 0;
+
+            if (coef <= 0) {
+                predictionResult.textContent = "Le coefficient doit être supérieur à zéro";
+                return;
+            }
+
+            const totalCoef = getTotalCoef();
+            const currentTotal = currentAverage * totalCoef;
+            const newTotal = currentTotal - (currentGrade * coef) + (targetGrade * coef);
+            const newAverage = newTotal / totalCoef;
+            const improvement = newAverage - currentAverage;
+
+            const subjectName = document.querySelector(.subject-input[data-id="${subjectId}"]).value || "cette matière";
+
+            predictionResult.innerHTML = `
+                <p>Si vous obtenez <strong>${targetGrade}/20</strong> en <strong>${subjectName}</strong> :</p>
+                <p>Votre nouvelle moyenne serait de <strong>${newAverage.toFixed(2)}/20</strong></p>
+                <p>Soit une amélioration de <strong>${improvement.toFixed(2)} points</strong></p>
+                <p class="advice">${getAdvice(improvement)}</p>
+            `;
+        }
+
+        function getAdvice(improvement) {
+            if (improvement > 1.5) return "🌟 Excellente stratégie ! Cette matière a un fort impact sur votre moyenne.";
+            if (improvement > 0.5) return "📈 Bon choix ! Concentrez-vous sur cette matière pour une amélioration significative.";
+            if (improvement > 0) return "👍 Légère amélioration. Pensez aussi à renforcer vos autres matières.";
+            return "ℹ Cette modification n'améliorera pas votre moyenne. Ciblez plutôt les matières avec de plus forts coefficients.";
+        }
+
+        function getTotalCoef() {
+            let totalCoef = 0;
+            document.querySelectorAll('.subject-card').forEach(card => {
+                const coef = parseFloat(card.querySelector('.subject-coef').value) || 0;
+                totalCoef += coef;
+            });
+            return totalCoef;
+        }
+
+        function resetCalculator() {
+            subjectsContainer.innerHTML = '';
+            subjectSelect.innerHTML = '<option value="">Sélectionnez une matière</option>';
+            averageDisplay.textContent = '0.00';
+            averageGauge.style.width = '0%';
+            predictionResult.textContent = "Sélectionnez une matière et une note cible pour voir la prédiction";
+            subjects = [];
+        }
+
+        addSubjectBtn.addEventListener('click', addSubject);
+        resetBtn.addEventListener('click', resetCalculator);
+        calculateTargetBtn.addEventListener('click', calculatePrediction);
+
+        window.addEventListener('load', () => {
+            addSubject();
+            addSubject();
+            addSubject();
+        });
+    </script>
+</body>
+</html>

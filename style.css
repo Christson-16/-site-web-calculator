@@ -1,0 +1,256 @@
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --danger: #f72585;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .subject-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .subject-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .grade-coef {
+            display: flex;
+            gap: 10px;
+            width: 180px;
+        }
+
+        .grade-coef input {
+            width: 100%;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .average-card {
+            background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .average-value {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 20px 0;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .gauge-container {
+            background: rgba(255, 255, 255, 0.2);
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            border-radius: 12px;
+            transition: width 1s ease-out;
+        }
+
+        .prediction-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .prediction-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .prediction-select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+        }
+
+        .target-input {
+            width: 100px;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+        }
+
+        .prediction-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border-left: 4px solid var(--success);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+         }
